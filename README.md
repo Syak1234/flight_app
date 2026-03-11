@@ -1,4 +1,4 @@
-# fight_app
+# Flight Booking
 
 A new Flutter project.
 

@@ -1,4 +1,4 @@
-import 'package:fight_app/features/home/presentation/bloc/search_bloc.dart';
+import 'package:flight_app/features/home/presentation/bloc/search_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,4 +1,4 @@
-import 'package:fight_app/features/booking_detail/view/widgets/ticket_card.dart';
+import 'package:flight_app/features/booking_detail/view/widgets/ticket_card.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/flight_info_widgets.dart';

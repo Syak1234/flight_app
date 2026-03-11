@@ -1,7 +1,7 @@
-import 'package:fight_app/core/router/app_router.dart';
-import 'package:fight_app/features/home/presentation/bloc/search_bloc.dart';
-import 'package:fight_app/features/home/presentation/bloc/search_event.dart';
-import 'package:fight_app/features/home/presentation/bloc/search_state.dart';
+import 'package:flight_app/core/router/app_router.dart';
+import 'package:flight_app/features/home/presentation/bloc/search_bloc.dart';
+import 'package:flight_app/features/home/presentation/bloc/search_event.dart';
+import 'package:flight_app/features/home/presentation/bloc/search_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,22 +29,24 @@ class _SearchFormCardState extends State<SearchFormCard>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    
-    _rotationAnimation = Tween<double>(
-      begin: 0,
-      end: 0.5,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 1.0, curve: Curves.easeInOutQuart),
-    ));
 
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.2), weight: 50),
-      TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 50),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 1.0, curve: Curves.easeInOut),
-    ));
+    _rotationAnimation = Tween<double>(begin: 0, end: 0.5).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 1.0, curve: Curves.easeInOutQuart),
+      ),
+    );
+
+    _scaleAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.2), weight: 50),
+          TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 50),
+        ]).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.0, 1.0, curve: Curves.easeInOut),
+          ),
+        );
   }
 
   @override
@@ -232,8 +234,8 @@ class _SearchFormCardState extends State<SearchFormCard>
               Expanded(
                 child: InkWell(
                   onTap: () => context.read<SearchBloc>().add(
-                        ChangeDepartureDate(context),
-                      ),
+                    ChangeDepartureDate(context),
+                  ),
                   child: _buildIconField(
                     context,
                     'Departure',
@@ -246,8 +248,8 @@ class _SearchFormCardState extends State<SearchFormCard>
               Expanded(
                 child: InkWell(
                   onTap: () => context.read<SearchBloc>().add(
-                        ChangePassengerCount(context),
-                      ),
+                    ChangePassengerCount(context),
+                  ),
                   child: _buildIconField(
                     context,
                     'Amount',
