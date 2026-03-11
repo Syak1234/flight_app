@@ -1,9 +1,11 @@
+import 'package:flight_app/core/constants/app_strings.dart';
+
 import 'core/config/app_config.dart';
 import 'main_common.dart';
 
 void main() {
   final stagingConfig = AppConfig(
-    appTitle: '[STG] Fight App',
+    appTitle: AppStrings.appName,
     apiBaseUrl: 'https://staging.api.fightapp.com',
     environment: AppEnvironment.staging,
     showDebugBanner: true,
