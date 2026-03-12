@@ -76,7 +76,7 @@ I adopted a modular approach inspired by industry standards (MNC-level projects)
 The UI was built to "WOW" the user at first glance:
 *   **Visuals:** Extensive use of `BackdropFilter` for frosted glass effects, vibrant gradients, and curated HSL color palettes.
 *   **Interactions:** Custom micro-animations, `BouncingScrollPhysics`, and animated transitions (like the 'From-To' swap) to enhance engagement.
-*   **Responsiveness:** Meticulous attention to padding, sizing, and typography to achieve a 100% pixel-perfect match with modern design trends.
+*   **Responsiveness:** Meticulous attention to padding, sizing, and trying to 100% pixel-perfect match with modern design trends.
 
 ### 3. Feature Highlights
 *   **Ticket Lifecycle:** Users can search for flights, view details, book, and download professional PDF boarding passes directly to their device.
@@ -86,7 +86,6 @@ The UI was built to "WOW" the user at first glance:
 
 ## ⏱️ Development Summary
 *   **Approximate Hours:** ~18 to 20 hours.
-*   **Workload:** This includes initial architecture setup, UI design iterations, implementing the local database for saved trips, PDF generation logic, and final pixel-perfect refinements.
 
 ---
 
