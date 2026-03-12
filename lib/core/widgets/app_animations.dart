@@ -75,3 +75,16 @@ extension StaggeredList on List<Widget> {
     }).toList();
   }
 }
+
+extension StaggeredWidget on Widget {
+  Widget animateStaggered({
+    int index = 0,
+    Duration delay = Duration.zero,
+    Duration interval = const Duration(milliseconds: 80),
+  }) {
+    return FadeSlideAnimation(
+      delay: delay + (interval * index),
+      child: this,
+    );
+  }
+}

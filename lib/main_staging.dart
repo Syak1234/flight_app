@@ -6,7 +6,7 @@ import 'main_common.dart';
 void main() {
   final stagingConfig = AppConfig(
     appTitle: AppStrings.appName,
-    apiBaseUrl: 'https://staging.api.fightapp.com',
+    apiBaseUrl: 'https://flight.wigian.in/flight_api.php',
     environment: AppEnvironment.staging,
     showDebugBanner: true,
   );

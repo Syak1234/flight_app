@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 class SavedTripModel {
+  final int? id;
   final String airlineName;
   final String airlineLogoText;
   final Color airlineLogoColor;
@@ -11,9 +12,11 @@ class SavedTripModel {
   final String arrivalCode;
   final String arrivalCity;
   final String duration;
+  final String? logoUrl;
   final String date;
 
   const SavedTripModel({
+    this.id,
     required this.airlineName,
     required this.airlineLogoText,
     required this.airlineLogoColor,
@@ -24,6 +27,7 @@ class SavedTripModel {
     required this.arrivalCode,
     required this.arrivalCity,
     required this.duration,
+    this.logoUrl,
     required this.date,
   });
 }

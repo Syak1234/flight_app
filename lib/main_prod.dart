@@ -6,7 +6,7 @@ import 'main_common.dart';
 void main() {
   final prodConfig = AppConfig(
     appTitle: AppStrings.appName,
-    apiBaseUrl: 'https://api.fightapp.com',
+    apiBaseUrl: 'https://flight.wigian.in/flight_api.php',
     environment: AppEnvironment.prod,
     showDebugBanner: false,
   );

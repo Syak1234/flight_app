@@ -10,12 +10,14 @@ import 'core/providers/connectivity_provider.dart';
 import 'core/widgets/connectivity_wrapper.dart';
 import 'core/widgets/error_screen.dart';
 import 'core/config/app_config.dart';
+import 'core/di/injection.dart';
 
-void runMainApp(AppConfig config) {
+void runMainApp(AppConfig config) async {
   runZonedGuarded(
-    () {
+    () async {
       WidgetsFlutterBinding.ensureInitialized();
       AppConfig.setConfig(config);
+      await initDI();
 
       FlutterError.onError = (FlutterErrorDetails details) {
         if (kDebugMode) {
@@ -42,7 +44,7 @@ void runMainApp(AppConfig config) {
 
       runApp(
         DevicePreview(
-          enabled: true,
+          enabled: false,
           builder: (context) => MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => ConnectivityProvider()),

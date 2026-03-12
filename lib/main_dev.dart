@@ -6,7 +6,7 @@ import 'main_common.dart';
 void main() {
   final devConfig = AppConfig(
     appTitle: AppStrings.appName,
-    apiBaseUrl: 'https://dev.api.fightapp.com',
+    apiBaseUrl: 'https://flight.wigian.in/flight_api.php',
     environment: AppEnvironment.dev,
     showDebugBanner: true,
   );

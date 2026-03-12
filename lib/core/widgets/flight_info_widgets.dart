@@ -5,106 +5,143 @@ class AirportInfo extends StatelessWidget {
   final String time;
   final String code;
   final String city;
-  final CrossAxisAlignment alignment;
+  final CrossAxisAlignment timeAlignment;
+  final CrossAxisAlignment infoAlignment;
 
   const AirportInfo({
     super.key,
     required this.time,
     required this.code,
     required this.city,
-    this.alignment = CrossAxisAlignment.start,
+    this.timeAlignment = CrossAxisAlignment.start,
+    this.infoAlignment = CrossAxisAlignment.start,
   });
+
+  String _formatTime(String timeStr) {
+    if (timeStr.isEmpty) return '';
+    final parts = timeStr.split(':');
+    if (parts.length >= 2) {
+      return '${parts[0]}:${parts[1]}';
+    }
+    return timeStr;
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Column(
-      crossAxisAlignment: alignment,
-      children: [
-        Text(
-          time,
-          style: AppTextStyles.time.copyWith(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: colorScheme.primary,
+
+    return Align(
+      alignment: _getAlignment(infoAlignment),
+      child: Column(
+        crossAxisAlignment: timeAlignment,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            _formatTime(time),
+            style: AppTextStyles.time.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: colorScheme.primary,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(
-              code,
-              style: AppTextStyles.title.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: colorScheme.onSurface,
-              ),
+          const SizedBox(height: 2),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: _getAlignment(timeAlignment),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  code,
+                  style: AppTextStyles.title.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '($city)',
+                  style: AppTextStyles.label.copyWith(
+                    fontSize: 12,
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 3),
-            Text(
-              '($city)',
-              style: AppTextStyles.label.copyWith(
-                fontSize: 12,
-                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-              ),
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
+  }
+
+  Alignment _getAlignment(CrossAxisAlignment alignment) {
+    switch (alignment) {
+      case CrossAxisAlignment.start:
+        return Alignment.centerLeft;
+      case CrossAxisAlignment.end:
+        return Alignment.centerRight;
+      case CrossAxisAlignment.center:
+        return Alignment.center;
+      default:
+        return Alignment.centerLeft;
+    }
   }
 }
 
 class FlightRouteIndicator extends StatelessWidget {
   final String duration;
+  final int stops;
 
   const FlightRouteIndicator({
     super.key,
     required this.duration,
+    this.stops = 0,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           width: 50,
-          height: 30,
+          height: 25,
           child: Stack(
             alignment: Alignment.center,
             children: [
               CustomPaint(
-                size: const Size(50, 30),
+                size: const Size(50, 25),
                 painter: _RoutePainter(
-                  color: colorScheme.primary,
+                  color: colorScheme.primary.withValues(alpha: 0.2),
                 ),
               ),
               Positioned(
-                bottom: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  child: Image.asset(
-                    'assets/icons/plane.png',
-                    height: 25,
-                    width: 25,
-                    color: colorScheme.primary,
-                  ),
+                top: 10,
+                child: Image.asset(
+                  'assets/icons/plane.png',
+                  height: 18,
+                  width: 18,
+                  color: colorScheme.primary,
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(height: 2),
-        Text(
-          duration,
-          style: AppTextStyles.label.copyWith(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurfaceVariant,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            duration,
+            style: AppTextStyles.label.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface.withValues(alpha: 0.8),
+            ),
           ),
         ),
       ],
@@ -119,26 +156,24 @@ class _RoutePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final path = Path();
+    final rect = Rect.fromLTWH(0, 5, size.width, size.height * 2);
 
-    path.addArc(
-      Rect.fromLTWH(0, 0, size.width, size.width),
-      3.14159 * 1.05,
-      3.14159 * 0.90,
-    );
+    // Draw dashed arc
+    final path = Path()..addArc(rect, 3.14159, 3.14159);
 
-    final dotPaint = Paint()
-      ..color = color.withValues(alpha: 0.3)
-      ..style = PaintingStyle.fill;
+    final dashPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2;
 
     for (var pathMetric in path.computeMetrics()) {
       double distance = 0.0;
       while (distance < pathMetric.length) {
         final tangent = pathMetric.getTangentForOffset(distance);
         if (tangent != null) {
-          canvas.drawCircle(tangent.position, 1.0, dotPaint);
+          canvas.drawCircle(tangent.position, 0.6, dashPaint);
         }
-        distance += 5.0;
+        distance += 4.0;
       }
     }
   }
