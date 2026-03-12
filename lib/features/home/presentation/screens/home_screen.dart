@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 15),
         SizedBox(
-          height: 205,
+          height: vm.savedTrips.isEmpty ? 120 : 205,
           child: vm.savedTrips.isEmpty
               ? Container(
                   width: double.infinity,

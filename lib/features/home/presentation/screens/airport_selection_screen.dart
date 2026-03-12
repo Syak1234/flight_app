@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -142,177 +143,199 @@ class _AirportSelectionScreenState extends State<AirportSelectionScreen> {
             ),
           ),
         ),
-        InkWell(
+        _buildGlassButton(
+          context,
+          icon: Icons.chevron_left,
           onTap: () => Navigator.pop(context),
-          borderRadius: BorderRadius.circular(30),
-          child: Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Icon(
-              Icons.chevron_left,
-              color: colorScheme.onSurface,
-              size: 28,
-            ),
-          ),
         ),
       ],
     );
   }
 
   Widget _buildSearchBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
+    final colorScheme = Theme.of(context).colorScheme;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          decoration: BoxDecoration(
+            color: colorScheme.surface.withValues(alpha: 0.6),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: colorScheme.surface.withValues(alpha: 0.3),
+              width: 1.5,
+            ),
           ),
-        ],
-      ),
-      child: TextField(
-        controller: _searchController,
-        autofocus: true,
-        style: AppTextStyles.value.copyWith(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
+          child: TextField(
+            controller: _searchController,
+            autofocus: true,
+            style: AppTextStyles.value.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+            decoration: InputDecoration(
+              hintText: 'Search city or airport code',
+              hintStyle: AppTextStyles.label.copyWith(
+                fontSize: 15,
+                color: AppColors.textSecondary.withValues(alpha: 0.5),
+              ),
+              prefixIcon: const Icon(
+                Icons.search_rounded,
+                color: AppColors.primary,
+                size: 24,
+              ),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.close_rounded, size: 20),
+                      onPressed: () {
+                        _searchController.clear();
+                        _fetchAirports('');
+                      },
+                    )
+                  : null,
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 18,
+              ),
+            ),
+            onChanged: (val) {
+              setState(() {});
+              if (_debounce?.isActive ?? false) _debounce!.cancel();
+              _debounce = Timer(const Duration(milliseconds: 400), () {
+                _fetchAirports(val);
+              });
+            },
+          ),
         ),
-        decoration: InputDecoration(
-          hintText: 'Search city or airport code',
-          hintStyle: AppTextStyles.label.copyWith(
-            fontSize: 15,
-            color: AppColors.textSecondary.withValues(alpha: 0.5),
-          ),
-          prefixIcon: const Icon(
-            Icons.search_rounded,
-            color: AppColors.primary,
-            size: 24,
-          ),
-          suffixIcon: _searchController.text.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.close_rounded, size: 20),
-                  onPressed: () {
-                    _searchController.clear();
-                    _fetchAirports('');
-                  },
-                )
-              : null,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 18,
-          ),
-        ),
-        onChanged: (val) {
-          setState(() {}); // Update suffix icon
-          if (_debounce?.isActive ?? false) _debounce!.cancel();
-          _debounce = Timer(const Duration(milliseconds: 400), () {
-            _fetchAirports(val);
-          });
-        },
       ),
     );
   }
 
   Widget _buildAirportCard(AirportModel airport) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          Navigator.pop(
-            context,
-            '${airport.city} (${airport.airportCode})',
-          );
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppColors.border.withValues(alpha: 0.3),
+    final colorScheme = Theme.of(context).colorScheme;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: InkWell(
+          onTap: () {
+            Navigator.pop(
+              context,
+              '${airport.city} (${airport.airportCode})',
+            );
+          },
+          borderRadius: BorderRadius.circular(24),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorScheme.surface.withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: colorScheme.surface.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.02),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.06),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  widget.isDeparture ? Icons.flight_takeoff_rounded : Icons.flight_land_rounded,
-                  color: AppColors.primary,
-                  size: 22,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      airport.city,
-                      style: AppTextStyles.title.copyWith(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${airport.city} International Airport',
-                      style: AppTextStyles.label.copyWith(
-                        fontSize: 13,
-                        color: AppColors.textSecondary,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF3F7FF),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  airport.airportCode,
-                  style: AppTextStyles.title.copyWith(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
+            child: Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(
+                    widget.isDeparture
+                        ? Icons.flight_takeoff_rounded
+                        : Icons.flight_land_rounded,
                     color: AppColors.primary,
-                    letterSpacing: 0.5,
+                    size: 24,
                   ),
                 ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        airport.city,
+                        style: AppTextStyles.title.copyWith(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${airport.city} International Airport',
+                        style: AppTextStyles.label.copyWith(
+                          fontSize: 13,
+                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    airport.airportCode,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.primary,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGlassButton(
+    BuildContext context, {
+    required IconData icon,
+    VoidCallback? onTap,
+    double size = 28,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(30),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: colorScheme.surface.withValues(alpha: 0.6),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: colorScheme.surface.withValues(alpha: 0.3),
+                width: 1.5,
               ),
-            ],
+            ),
+            child: Icon(
+              icon,
+              color: colorScheme.onSurface,
+              size: size,
+            ),
           ),
         ),
       ),

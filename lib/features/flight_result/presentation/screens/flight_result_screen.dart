@@ -296,12 +296,12 @@ class _FlightResultScreenState extends State<FlightResultScreen> {
           builder: (context) => AdvancedFilterSheet(viewModel: _viewModel),
         );
       },
-      backgroundColor: const Color.fromARGB(255, 182, 214, 250),
+      backgroundColor: const Color(0xffbfd9fd),
       elevation: 0,
       shape: const CircleBorder(),
       child: const Icon(
         Icons.filter_alt_outlined,
-        color: Color(0xFF2A75F6),
+        color: Color(0xFF6c9bd6),
         size: 26,
       ),
     );

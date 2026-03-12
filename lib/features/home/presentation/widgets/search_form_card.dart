@@ -90,8 +90,9 @@ class _SearchFormCardState extends State<SearchFormCard>
     final today = DateTime(now.year, now.month, now.day);
     final colorScheme = Theme.of(context).colorScheme;
 
-    DateTime selectedDate =
-        vm.departureDate.isBefore(today) ? today : vm.departureDate;
+    DateTime selectedDate = vm.departureDate.isBefore(today)
+        ? today
+        : vm.departureDate;
 
     final result = await showModalBottomSheet<DateTime>(
       context: context,
@@ -130,9 +131,7 @@ class _SearchFormCardState extends State<SearchFormCard>
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Divider(
-                    color: colorScheme.onSurface.withValues(alpha: 0.05),
-                  ),
+                  Divider(color: colorScheme.onSurface.withValues(alpha: 0.05)),
                   Expanded(
                     child: Theme(
                       data: Theme.of(context).copyWith(
@@ -301,8 +300,9 @@ class _SearchFormCardState extends State<SearchFormCard>
             color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.4),
             borderRadius: BorderRadius.circular(28),
             border: Border.all(
-              color:
-                  Theme.of(context).colorScheme.surface.withValues(alpha: 0.3),
+              color: Theme.of(
+                context,
+              ).colorScheme.surface.withValues(alpha: 0.3),
               width: 1.5,
             ),
           ),
@@ -324,7 +324,17 @@ class _SearchFormCardState extends State<SearchFormCard>
                     ),
                     const SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Divider(
+                        height: 1,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.08),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: _buildSearchButton(context),
                     ),
                   ],
@@ -358,6 +368,8 @@ class _SearchFormCardState extends State<SearchFormCard>
             ),
             Divider(
               height: 1,
+              // indent: 0,
+              // endIndent: 4,
               color: colorScheme.onSurface.withValues(alpha: 0.08),
             ),
             InkWell(
