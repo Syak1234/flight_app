@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:flight_app/core/di/injection.dart';
+import 'package:flight_app/features/flight_result/domain/repositories/flight_repository.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -63,7 +65,7 @@ class _AirportSelectionScreenState extends State<AirportSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     const double pagePadding = 16.0;
-    
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -80,7 +82,10 @@ class _AirportSelectionScreenState extends State<AirportSelectionScreen> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: pagePadding, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: pagePadding,
+                  vertical: 12,
+                ),
                 child: _buildHeader(context),
               ),
               const SizedBox(height: 10),
@@ -93,28 +98,34 @@ class _AirportSelectionScreenState extends State<AirportSelectionScreen> {
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _error != null
-                        ? NoDataFoundWidget(
-                            title: 'Error Occurred',
-                            subtitle: _error!,
-                            icon: Icons.error_outline_rounded,
-                            onRetry: () => _fetchAirports(_searchController.text),
-                          )
-                        : _airports.isEmpty
-                            ? NoDataFoundWidget(
-                                title: 'No Airport Found',
-                                subtitle: 'Try searching for another city or code.',
-                                onRetry: () => _fetchAirports(''),
-                              )
-                            : ListView.separated(
-                                physics: const BouncingScrollPhysics(),
-                                padding: const EdgeInsets.fromLTRB(pagePadding, 0, pagePadding, 24),
-                                itemCount: _airports.length,
-                                separatorBuilder: (context, index) => const SizedBox(height: 12),
-                                itemBuilder: (context, index) {
-                                  final airport = _airports[index];
-                                  return _buildAirportCard(airport);
-                                },
-                              ),
+                    ? NoDataFoundWidget(
+                        title: 'Error Occurred',
+                        subtitle: _error!,
+                        icon: Icons.error_outline_rounded,
+                        onRetry: () => _fetchAirports(_searchController.text),
+                      )
+                    : _airports.isEmpty
+                    ? NoDataFoundWidget(
+                        title: 'No Airport Found',
+                        subtitle: 'Try searching for another city or code.',
+                        onRetry: () => _fetchAirports(''),
+                      )
+                    : ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.fromLTRB(
+                          pagePadding,
+                          0,
+                          pagePadding,
+                          24,
+                        ),
+                        itemCount: _airports.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final airport = _airports[index];
+                          return _buildAirportCard(airport);
+                        },
+                      ),
               ),
             ],
           ),
@@ -219,10 +230,7 @@ class _AirportSelectionScreenState extends State<AirportSelectionScreen> {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: InkWell(
           onTap: () {
-            Navigator.pop(
-              context,
-              '${airport.city} (${airport.airportCode})',
-            );
+            Navigator.pop(context, '${airport.city} (${airport.airportCode})');
           },
           borderRadius: BorderRadius.circular(24),
           child: Container(
@@ -270,7 +278,9 @@ class _AirportSelectionScreenState extends State<AirportSelectionScreen> {
                         '${airport.city} International Airport',
                         style: AppTextStyles.label.copyWith(
                           fontSize: 13,
-                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                          color: colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -280,8 +290,10 @@ class _AirportSelectionScreenState extends State<AirportSelectionScreen> {
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -329,11 +341,7 @@ class _AirportSelectionScreenState extends State<AirportSelectionScreen> {
                 width: 1.5,
               ),
             ),
-            child: Icon(
-              icon,
-              color: colorScheme.onSurface,
-              size: size,
-            ),
+            child: Icon(icon, color: colorScheme.onSurface, size: size),
           ),
         ),
       ),
