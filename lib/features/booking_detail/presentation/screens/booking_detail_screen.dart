@@ -4,12 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../viewmodel/booking_detail_viewmodel.dart';
-import '../widgets/passenger_item.dart';
-import '../widgets/barcode_widget.dart';
-import '../widgets/ticket_card.dart';
-import '../../../../core/widgets/flight_info_widgets.dart';
-import '../../../flight_result/presentation/widgets/airline_logo.dart';
-import '../../data/models/booking_model.dart';
+import '../widgets/index.dart';
+import '../../../../core/widgets/index.dart';
+import '../../../flight_result/presentation/widgets/index.dart';
+import '../../data/models/index.dart';
 
 class BookingDetailScreen extends StatefulWidget {
   final int flightId;
@@ -60,7 +58,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
         child: SafeArea(
           bottom: false,
           child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.fromLTRB(
                 pagePadding,
@@ -95,7 +93,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                       const SizedBox(height: 16),
                       _buildPassengerCard(context, viewModel.booking!),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
+                        height: MediaQuery.of(context).size.height * 0.05,
                       ),
                       _buildDownloadButton(context, viewModel),
                     ],
@@ -305,25 +303,29 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     );
   }
 
-  void _showTopNotification(BuildContext context, SaveResult result) {
-    String message;
+  void _showTopNotification(BuildContext context, DownloadResult result) {
+    String title = '';
+    String subTitle = '';
     IconData icon;
     Color iconColor;
 
-    switch (result) {
+    switch (result.status) {
       case SaveResult.success:
-        message = 'Boarding pass saved successfully';
-        icon = Icons.check_circle_outline;
+        title = 'Ticket Downloaded & Saved';
+        subTitle = 'Saved to: ${result.path}';
+        icon = Icons.check_circle_rounded;
         iconColor = Colors.greenAccent;
         break;
       case SaveResult.duplicate:
-        message = 'Pass already exists in your trips';
-        icon = Icons.info_outline;
-        iconColor = Colors.orangeAccent;
+        title = 'Ticket Downloaded & Saved';
+        subTitle = 'Saved to: ${result.path}';
+        icon = Icons.check_circle_rounded;
+        iconColor = Colors.greenAccent;
         break;
       case SaveResult.error:
-        message = 'Failed to save boarding pass';
-        icon = Icons.error_outline;
+        title = 'Download failed';
+        subTitle = 'Please check permissions and try again';
+        icon = Icons.error_rounded;
         iconColor = Colors.redAccent;
         break;
     }
@@ -371,13 +373,48 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                   Icon(icon, color: iconColor, size: 22),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      message,
-                      style: const TextStyle(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.1,
+                          ),
+                        ),
+                        if (subTitle.isNotEmpty) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            subTitle,
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.6),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  InkWell(
+                    onTap: () => overlayEntry.remove(),
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.close_rounded,
                         color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.2,
+                        size: 16,
                       ),
                     ),
                   ),
@@ -390,9 +427,6 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     );
 
     overlay.insert(overlayEntry);
-    Future.delayed(const Duration(seconds: 3), () {
-      overlayEntry.remove();
-    });
   }
 
   Widget _buildDownloadButton(BuildContext context, BookingDetailViewModel vm) {
@@ -406,13 +440,6 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
             final result = await vm.downloadAndSavePass();
             if (context.mounted) {
               _showTopNotification(context, result);
-              if (result == SaveResult.success) {
-                Future.delayed(const Duration(milliseconds: 1200), () {
-                  if (context.mounted) {
-                    context.go('/');
-                  }
-                });
-              }
             }
           },
           style: ElevatedButton.styleFrom(

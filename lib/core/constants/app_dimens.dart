@@ -9,6 +9,6 @@ abstract final class AppDimens {
   static const double paddingL = 16;
   static const double paddingXL = 20;
   static const double paddingXXL = 24;
-
+  static const double pagePadding = 16.0;
   static const double airlineLogoSize = 40;
 }

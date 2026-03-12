@@ -47,6 +47,11 @@ dependencies:
   path: ^1.9.1
   dio_smart_retry: 7.0.1
   dio_cache_interceptor: ^3.5.0
+  pdf: ^3.11.3
+  printing: ^5.14.2
+  path_provider: ^2.1.5
+  open_filex: ^4.7.0
+  permission_handler: ^12.0.1
   
 
 dev_dependencies:

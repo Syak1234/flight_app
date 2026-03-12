@@ -7,8 +7,7 @@ import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'core/providers/connectivity_provider.dart';
-import 'core/widgets/connectivity_wrapper.dart';
-import 'core/widgets/error_screen.dart';
+import 'core/widgets/index.dart';
 import 'core/config/app_config.dart';
 import 'core/di/injection.dart';
 
@@ -44,7 +43,7 @@ void runMainApp(AppConfig config) async {
 
       runApp(
         DevicePreview(
-          enabled: false,
+          enabled: true,
           builder: (context) => MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => ConnectivityProvider()),

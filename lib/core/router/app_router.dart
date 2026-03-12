@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/home/presentation/screens/home_screen.dart';
-import '../../features/flight_result/presentation/screens/flight_result_screen.dart';
-import '../../features/booking_detail/presentation/screens/booking_detail_screen.dart';
-import '../../features/home/presentation/screens/airport_selection_screen.dart';
-import '../../features/home/presentation/screens/saved_trips_screen.dart';
-import '../widgets/error_screen.dart';
+import '../../features/home/presentation/screens/index.dart';
+import '../../features/flight_result/presentation/screens/index.dart';
+import '../../features/booking_detail/presentation/screens/index.dart';
+import '../widgets/index.dart';
 
 class AppRouter {
   static final navigatorKey = GlobalKey<NavigatorState>();

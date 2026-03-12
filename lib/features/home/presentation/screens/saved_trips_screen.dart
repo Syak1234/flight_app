@@ -1,3 +1,4 @@
+import 'package:flight_app/core/constants/app_dimens.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection.dart';
@@ -5,8 +6,8 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_animations.dart';
 import '../viewmodel/home_viewmodel.dart';
-import '../widgets/saved_trip_card.dart';
-import '../../../../core/widgets/no_data_found_widget.dart';
+import '../widgets/index.dart';
+import '../../../../core/widgets/index.dart';
 
 class SavedTripsScreen extends StatefulWidget {
   const SavedTripsScreen({super.key});
@@ -41,8 +42,6 @@ class _SavedTripsScreenState extends State<SavedTripsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const double pagePadding = 16.0;
-
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -61,10 +60,17 @@ class _SavedTripsScreenState extends State<SavedTripsScreen> {
             builder: (context, _) {
               return CustomScrollView(
                 controller: _scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
                 slivers: [
                   SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(pagePadding, 12, pagePadding, 0),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppDimens.pagePadding,
+                      12,
+                      AppDimens.pagePadding,
+                      0,
+                    ),
                     sliver: SliverToBoxAdapter(
                       child: Column(
                         children: [
@@ -74,13 +80,17 @@ class _SavedTripsScreenState extends State<SavedTripsScreen> {
                       ),
                     ),
                   ),
-                  if (_viewModel.allSavedTrips.isEmpty && !_viewModel.isLoadingMore)
+                  if (_viewModel.allSavedTrips.isEmpty &&
+                      !_viewModel.isLoadingMore)
                     SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: pagePadding),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppDimens.pagePadding,
+                      ),
                       sliver: SliverToBoxAdapter(
                         child: NoDataFoundWidget(
                           title: 'Your list is empty',
-                          subtitle: 'Saved flights will be shown here after you bookmark them.',
+                          subtitle:
+                              'Saved flights will be shown here after you bookmark them.',
                           icon: Icons.bookmark_outline_rounded,
                           onRetry: () => _viewModel.refreshSavedTrips(),
                         ),
@@ -88,7 +98,9 @@ class _SavedTripsScreenState extends State<SavedTripsScreen> {
                     )
                   else ...[
                     SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: pagePadding),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppDimens.pagePadding,
+                      ),
                       sliver: SliverList.builder(
                         itemCount: _viewModel.allSavedTrips.length,
                         itemBuilder: (context, index) {

@@ -3,10 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import '../../../flight_result/data/models/airport_model.dart';
-import '../../../flight_result/domain/repositories/flight_repository.dart';
-import '../../../../core/di/injection.dart';
-import '../../../../core/widgets/no_data_found_widget.dart';
+import '../../../flight_result/data/models/index.dart';
+import '../../../../core/widgets/index.dart';
 
 class AirportSelectionScreen extends StatefulWidget {
   final bool isDeparture;

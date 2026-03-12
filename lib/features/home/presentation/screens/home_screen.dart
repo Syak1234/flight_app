@@ -8,8 +8,7 @@ import '../../../../core/widgets/app_animations.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../viewmodel/home_viewmodel.dart';
 import '../viewmodel/search_viewmodel.dart';
-import '../widgets/search_form_card.dart';
-import '../widgets/saved_trip_card.dart';
+import '../widgets/index.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/di/injection.dart';
 
@@ -58,12 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
             SafeArea(
               bottom: false,
               child: SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -100,13 +99,16 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.all(1.5),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.white.withOpacity(0.4), width: 2),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.4),
+          width: 2,
+        ),
       ),
       child: ClipOval(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             child: CachedNetworkImage(
               imageUrl: AppStrings.userImage,
               imageBuilder: (context, imageProvider) =>
@@ -213,6 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 )
               : ListView.separated(
+                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   scrollDirection: Axis.horizontal,
                   itemCount: vm.savedTrips.length,

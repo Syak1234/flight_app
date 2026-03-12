@@ -5,8 +5,16 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/database/database_helper.dart';
 import '../../../home/data/models/saved_trip_model.dart';
 import '../../../home/presentation/viewmodel/home_viewmodel.dart';
+import '../../../../core/utils/ticket_pdf_helper.dart';
 
 enum SaveResult { success, duplicate, error }
+
+class DownloadResult {
+  final SaveResult status;
+  final String? path;
+
+  DownloadResult(this.status, {this.path});
+}
 
 class BookingDetailViewModel extends ChangeNotifier {
   BookingDetailModel? _booking;
@@ -53,10 +61,17 @@ class BookingDetailViewModel extends ChangeNotifier {
     }
   }
 
-  Future<SaveResult> downloadAndSavePass() async {
-    if (_booking == null) return SaveResult.error;
+  Future<DownloadResult> downloadAndSavePass() async {
+    if (_booking == null) return DownloadResult(SaveResult.error);
 
     try {
+      final String? filePath =
+          await TicketPdfHelper.generateAndSaveTicket(_booking!);
+
+      if (filePath == null) {
+        return DownloadResult(SaveResult.error);
+      }
+
       final trip = SavedTripModel(
         airlineName: _booking!.airlineName,
         airlineLogoText: _booking!.airlineName,
@@ -73,16 +88,16 @@ class BookingDetailViewModel extends ChangeNotifier {
       );
 
       final result = await DatabaseHelper.instance.saveTrip(trip);
-      
+
       if (result == -1) {
-        return SaveResult.duplicate;
+        return DownloadResult(SaveResult.success, path: filePath);
       }
 
       await sl<HomeViewModel>().refreshSavedTrips();
-      return SaveResult.success;
+      return DownloadResult(SaveResult.success, path: filePath);
     } catch (e) {
       debugPrint('Error saving pass: $e');
-      return SaveResult.error;
+      return DownloadResult(SaveResult.error);
     }
   }
 }

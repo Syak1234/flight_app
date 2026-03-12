@@ -6,10 +6,8 @@ import '../../../../core/widgets/app_animations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../viewmodel/flight_result_viewmodel.dart';
-import '../widgets/filter_chip_bar.dart';
-import '../widgets/flight_card.dart';
-import '../widgets/advanced_filter_sheet.dart';
-import '../../../../core/widgets/no_data_found_widget.dart';
+import '../widgets/index.dart';
+import '../../../../core/widgets/index.dart';
 
 class FlightResultScreen extends StatefulWidget {
   final String fromCode;
@@ -82,7 +80,9 @@ class _FlightResultScreenState extends State<FlightResultScreen> {
               builder: (context, _) {
                 return CustomScrollView(
                   controller: _scrollController,
-                  physics: const AlwaysScrollableScrollPhysics(),
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
                   slivers: [
                     SliverPadding(
                       padding: EdgeInsets.fromLTRB(
