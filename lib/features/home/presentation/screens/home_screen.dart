@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flight_app/core/constants/app_strings.dart';
 import 'package:flutter/cupertino.dart';
@@ -99,20 +100,22 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.all(1.5),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.6),
-          width: 2,
-        ),
+        border: Border.all(color: Colors.white.withOpacity(0.4), width: 2),
       ),
-      child: CachedNetworkImage(
-        imageUrl: AppStrings.userImage,
-        imageBuilder: (context, imageProvider) =>
-            CircleAvatar(radius: 20, backgroundImage: imageProvider),
-        placeholder: (context, url) => const _ShimmerCircle(radius: 20),
-        errorWidget: (context, url, error) => const CircleAvatar(
-          radius: 20,
-          backgroundColor: Color(0xFFE0E0E0),
-          child: Icon(Icons.person, color: Colors.white, size: 24),
+      child: ClipOval(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: Container(
+            color: Colors.white.withOpacity(0.1),
+            child: CachedNetworkImage(
+              imageUrl: AppStrings.userImage,
+              imageBuilder: (context, imageProvider) =>
+                  CircleAvatar(radius: 20, backgroundImage: imageProvider),
+              placeholder: (context, url) => const _ShimmerCircle(radius: 20),
+              errorWidget: (context, url, error) =>
+                  const CircleAvatar(radius: 20, child: Icon(Icons.person)),
+            ),
+          ),
         ),
       ),
     );

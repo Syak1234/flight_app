@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flight_app/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -84,7 +85,12 @@ class _FlightResultScreenState extends State<FlightResultScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
                     SliverPadding(
-                      padding: EdgeInsets.fromLTRB(pagePadding, 12, pagePadding, 0),
+                      padding: EdgeInsets.fromLTRB(
+                        pagePadding,
+                        12,
+                        pagePadding,
+                        0,
+                      ),
                       sliver: SliverToBoxAdapter(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -104,13 +110,13 @@ class _FlightResultScreenState extends State<FlightResultScreen> {
                     if (_viewModel.isLoading)
                       const SliverFillRemaining(
                         hasScrollBody: false,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
+                        child: Center(child: CircularProgressIndicator()),
                       )
                     else if (_viewModel.error != null)
                       SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: pagePadding),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: pagePadding,
+                        ),
                         sliver: SliverToBoxAdapter(
                           child: NoDataFoundWidget(
                             title: 'Error Occurred',
@@ -122,11 +128,14 @@ class _FlightResultScreenState extends State<FlightResultScreen> {
                       )
                     else if (_viewModel.flights.isEmpty)
                       SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: pagePadding),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: pagePadding,
+                        ),
                         sliver: SliverToBoxAdapter(
                           child: NoDataFoundWidget(
                             title: 'No Flight Found',
-                            subtitle: 'Try adjusting your search filters or dates.',
+                            subtitle:
+                                'Try adjusting your search filters or dates.',
                             icon: Icons.flight_takeoff_rounded,
                             onRetry: () => _viewModel.fetchFlights(),
                           ),
@@ -134,7 +143,9 @@ class _FlightResultScreenState extends State<FlightResultScreen> {
                       )
                     else ...[
                       SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: pagePadding),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: pagePadding,
+                        ),
                         sliver: SliverList.builder(
                           itemCount: _viewModel.flights.length,
                           itemBuilder: (context, index) {
@@ -178,6 +189,7 @@ class _FlightResultScreenState extends State<FlightResultScreen> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Stack(
       alignment: Alignment.centerLeft,
       children: [
@@ -196,38 +208,72 @@ class _FlightResultScreenState extends State<FlightResultScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            InkWell(
+            _buildGlassButton(
+              context,
+              icon: Icons.chevron_left,
               onTap: () => Navigator.pop(context),
-              borderRadius: BorderRadius.circular(30),
-              child: Container(
-                width: 44,
-                height: 44,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.chevron_left,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  size: 28,
+            ),
+            PopupMenuButton<String>(
+              offset: const Offset(0, 50),
+              onSelected: (value) {
+                switch (value) {
+                  case 'refresh':
+                    _viewModel.fetchFlights();
+                    break;
+                  case 'clear':
+                    _viewModel.resetFilters();
+                    break;
+                  case 'sort_az':
+                    final index = _viewModel.sortOptions.indexWhere(
+                      (e) => e['value'] == 'airline_asc',
+                    );
+                    if (index != -1) _viewModel.selectFilter(index);
+                    break;
+                }
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+                side: BorderSide(
+                  color: colorScheme.surface.withValues(alpha: 0.15),
+                  width: 1.5,
                 ),
               ),
-            ),
-            InkWell(
-              onTap: () {},
-              borderRadius: BorderRadius.circular(30),
-              child: Container(
-                width: 44,
-                height: 44,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
+              color: colorScheme.surface.withValues(alpha: 0.9),
+              elevation: 4,
+              shadowColor: Colors.black12,
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'refresh',
+                  child: _buildPremiumMenuItem(
+                    context,
+                    icon: Icons.refresh_rounded,
+                    label: 'Refresh results',
+                    iconColor: colorScheme.primary,
+                  ),
                 ),
-                child: Icon(
-                  Icons.more_vert,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  size: 20,
+                PopupMenuItem(
+                  value: 'clear',
+                  child: _buildPremiumMenuItem(
+                    context,
+                    icon: Icons.filter_alt_off_rounded,
+                    label: 'Clear filters',
+                    iconColor: Colors.redAccent,
+                  ),
                 ),
+                PopupMenuItem(
+                  value: 'sort_az',
+                  child: _buildPremiumMenuItem(
+                    context,
+                    icon: Icons.sort_by_alpha_rounded,
+                    label: 'A - Z Airline',
+                    iconColor: Colors.blueAccent,
+                  ),
+                ),
+              ],
+              child: _buildGlassButton(
+                context,
+                icon: Icons.more_vert,
+                size: 20,
               ),
             ),
           ],
@@ -244,8 +290,6 @@ class _FlightResultScreenState extends State<FlightResultScreen> {
           isScrollControlled: true,
           useSafeArea: true,
           showDragHandle: true,
-
-          // ackgroundColor: AppColors.background,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
           ),
@@ -259,6 +303,67 @@ class _FlightResultScreenState extends State<FlightResultScreen> {
         Icons.filter_alt_outlined,
         color: Color(0xFF2A75F6),
         size: 26,
+      ),
+    );
+  }
+
+  Widget _buildPremiumMenuItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required Color iconColor,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: iconColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(icon, size: 18, color: iconColor),
+        ),
+        const SizedBox(width: 14),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.2,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGlassButton(
+    BuildContext context, {
+    required IconData icon,
+    VoidCallback? onTap,
+    double size = 28,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(30),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: colorScheme.surface.withValues(alpha: 0.6),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: colorScheme.surface.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
+            ),
+            child: Icon(icon, color: colorScheme.onSurface, size: size),
+          ),
+        ),
       ),
     );
   }

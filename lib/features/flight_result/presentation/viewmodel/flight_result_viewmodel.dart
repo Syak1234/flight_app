@@ -37,6 +37,7 @@ class FlightResultViewModel extends ChangeNotifier {
     {'title': 'Highest Price', 'value': 'price_desc'},
     {'title': 'Shortest Time', 'value': 'duration_asc'},
     {'title': 'Earliest Departure', 'value': 'departure_asc'},
+    {'title': 'A - Z Airline', 'value': 'airline_asc'},
   ];
 
   List<String> get filters => sortOptions.map((e) => e['title']!).toList();
@@ -150,6 +151,15 @@ class FlightResultViewModel extends ChangeNotifier {
     _maxPrice = maxPrice;
     _stops = stops;
     _selectedAircraftType = aircraftType;
+    fetchFlights();
+  }
+
+  void resetFilters() {
+    _selectedAirline = null;
+    _maxPrice = null;
+    _stops = null;
+    _selectedAircraftType = null;
+    _selectedFilterIndex = 0;
     fetchFlights();
   }
 }

@@ -100,97 +100,84 @@ class _SearchFormCardState extends State<SearchFormCard>
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
-            return ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(32),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.65,
-                  decoration: BoxDecoration(
-                    color: colorScheme.surface.withValues(alpha: 0.8),
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(32),
-                    ),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 12),
-                      Container(
-                        width: 40,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: colorScheme.onSurface.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Text(
-                        'Select Departure Date',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          color: colorScheme.onSurface,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Divider(
-                        color: colorScheme.onSurface.withValues(alpha: 0.05),
-                      ),
-                      Expanded(
-                        child: Theme(
-                          data: Theme.of(context).copyWith(
-                            colorScheme: colorScheme.copyWith(
-                              primary: AppColors.primary,
-                              onPrimary: Colors.white,
-                              surface: Colors.transparent,
-                            ),
-                          ),
-                          child: CalendarDatePicker(
-                            initialDate: selectedDate,
-                            firstDate: today,
-                            lastDate: today.add(const Duration(days: 365)),
-                            onDateChanged: (date) {
-                              setModalState(() => selectedDate = date);
-                            },
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: ElevatedButton(
-                            onPressed: () =>
-                                Navigator.pop(context, selectedDate),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: const Text(
-                              'Confirm Date',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.65,
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(32),
                 ),
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: colorScheme.onSurface.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Select Departure Date',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: colorScheme.onSurface,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Divider(
+                    color: colorScheme.onSurface.withValues(alpha: 0.05),
+                  ),
+                  Expanded(
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        colorScheme: colorScheme.copyWith(
+                          primary: AppColors.primary,
+                          onPrimary: Colors.white,
+                          surface: colorScheme.surface,
+                        ),
+                      ),
+                      child: CalendarDatePicker(
+                        initialDate: selectedDate,
+                        firstDate: today,
+                        lastDate: today.add(const Duration(days: 365)),
+                        onDateChanged: (date) {
+                          setModalState(() => selectedDate = date);
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context, selectedDate),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Text(
+                          'Confirm Date',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             );
           },
@@ -311,29 +298,37 @@ class _SearchFormCardState extends State<SearchFormCard>
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.50),
+            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.4),
             borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color:
+                  Theme.of(context).colorScheme.surface.withValues(alpha: 0.3),
+              width: 1.5,
+            ),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(28),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 16, 0, 20),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: _buildLocationSection(context),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: _buildInfoRow(context),
-                  ),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: _buildSearchButton(context),
-                  ),
-                ],
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 16, 0, 20),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: _buildLocationSection(context),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: _buildInfoRow(context),
+                    ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: _buildSearchButton(context),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
