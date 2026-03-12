@@ -17,12 +17,10 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     navigatorKey: navigatorKey,
     initialLocation: home,
+
     errorBuilder: (context, state) => const GlobalErrorScreen(),
     routes: [
-      GoRoute(
-        path: home,
-        builder: (context, state) => const HomeScreen(),
-      ),
+      GoRoute(path: home, builder: (context, state) => const HomeScreen()),
       GoRoute(
         path: flightResults,
         builder: (context, state) {

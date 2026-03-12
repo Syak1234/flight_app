@@ -8,3 +8,8 @@
 
 # Connectivity Plus
 -keep class com.baseflow.connectivity.** { *; }
+
+# Fix Play Core build failures (referenced by Flutter engine for deferred components)
+-dontwarn com.google.android.play.core.**
+
+
