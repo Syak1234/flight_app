@@ -85,7 +85,7 @@ The UI was built to "WOW" the user at first glance:
 ---
 
 ## ⏱️ Development Summary
-*   **Approximate Hours:** ~18 to 20 hours.
+*   **Approximate Hours:** 19 hours.
 
 ---
 

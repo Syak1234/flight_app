@@ -43,7 +43,7 @@ void runMainApp(AppConfig config) async {
 
       runApp(
         DevicePreview(
-          enabled: true,
+          enabled: false,
           builder: (context) => MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
